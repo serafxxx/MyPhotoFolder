@@ -29,11 +29,11 @@ def shutdown_session(exception=None):
     db.session.remove()
 
 @app.cli.command()
-@click.option('--from-path', help='Path to get media files from')
+@click.option('--from-path', help='Path to new media files')
 def copy_media(from_path):
     '''Console command for import media from given path
     Usage example:
-    $ flask copy_media --from-path "/path/to/folder"
+    $ flask copy_media --from-path "/path/to/new/files"
     '''
     from util.myfiles import import_media
 
@@ -43,3 +43,13 @@ def copy_media(from_path):
     log.debug('Importing from %s' % from_path)
     imprt = import_media(from_path)
 
+
+@app.cli.command()
+def analyze_lib():
+    '''Console command for analyze new media in the PHOTOS_PATH
+    Usage example:
+    $ flask analyze-lib
+    '''
+    from util.myfiles import import_media
+    log.debug('Importing from %s' % app.config['PHOTOS_PATH'])
+    imprt = import_media(app.config['PHOTOS_PATH'])
