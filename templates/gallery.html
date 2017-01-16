@@ -1,0 +1,10 @@
+<div id="gallery" style="display:none;">
+
+    {% for my_file in my_files %}
+        <img alt="{{ my_file.rel_path }}"
+            src="{{ url_for('photos.static', filename=my_file.rel_thumb) }}"
+            data-image="{{ url_for('photos.static', filename=my_file.rel_preview) }}"
+        >
+    {% endfor %}
+
+</div>

@@ -20,19 +20,19 @@ $ git clone https://github.com/serafxxx/MyPhotoFolder.git
 $ cd MyPhotoFolder
 $ ./buid.sh
 ```
-2. Set `PHOTOS_PATH` config variable to point to the folder with your files.
+2. Set `MPF_PHOTOS_PATH` env variable to point to the folder with your files.
 The folder could already have your collection of home photos/videos, it will
-stay on its place. MPF wouldn't move any files from/inside `PHOTOS_PATH` folder.
+stay on its place. MPF wouldn't move any files from/inside `MPF_PHOTOS_PATH` folder.
 
 3. To add new files to your folder run import. MPF will copy files to `autoimport`
-folder inside PHOTOS_PATH (`autoimport` folder will have structure based on dates)
+folder inside `MPF_PHOTOS_PATH` (`autoimport` folder will have structure based on dates)
 
 ```
 $ flask copy_media --from-path="/path/to/new/files"
 ```
 
-4. Another way is to put your files inside `PHOTOS_PATH` manually in any subdirectory
-you like and run import from `PHOTOS_PATH` itself. MPF will scan your folder, ignore
+4. Another way is to put your files inside `MPF_PHOTOS_PATH` manually in any subdirectory
+you like and run import from `MPF_PHOTOS_PATH` itself. MPF will scan your folder, ignore
 old files and analyse new files. In this way new files would be available through the
 web interface.
 

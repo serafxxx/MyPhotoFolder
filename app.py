@@ -1,5 +1,6 @@
 import os
 import click
+from flask import Blueprint
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
@@ -11,18 +12,25 @@ from util import mkdir_p
 from logging import config as logging_config
 
 app = Flask(__name__)
+# Apply configuration
 app.config.from_object(config)
+# Setup logger
 log = app.logger
 logging_config.dictConfig(LOGGING)
 
+# Setup twitter bootstrap
 Bootstrap(app)
 
+# Setup database. Don't forget to run migrations
+# manually to setup db from the ground.
 db = SQLAlchemy(app, session_options={'autocommit': False, 'autoflush': False} )
-
 mkdir_p(app.config['MPF_PATH'])
-
 if not os.path.isfile(app.config['DATABASE_PATH']):
     db.create_all()
+
+# Register blueprint to serve our photos folder as static files
+photos_blueprint = Blueprint('photos', __name__, static_url_path='/static/photos', static_folder=app.config['PHOTOS_PATH'])
+app.register_blueprint(photos_blueprint)
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

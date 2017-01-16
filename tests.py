@@ -8,7 +8,7 @@ config.config = config.Testing
 import os
 import unittest
 
-from models import app, db, log
+from models import app, db, log, TYPE_VIDEO, MyFile
 from util.myfiles import import_media
 
 

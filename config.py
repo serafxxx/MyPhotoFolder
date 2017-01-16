@@ -52,6 +52,11 @@ class Config(object):
     EXIFTOOL_PATH = os.path.join(ROOT_PATH, 'util/Image-ExifTool-10.33/exiftool')
 
     """
+    Ffmpeg executable to deal with videos
+    """
+    FFMPEG_BIN = os.environ.get('FFMPEG_BIN') or 'ffmpeg'
+
+    """
     MPF wouldn'd import files which match any of IGNORE_FILE_PATTERNS
     """
     IGNORE_FILE_PATTERNS = (
@@ -62,7 +67,7 @@ class Config(object):
     """
     Thumbs size
     """
-    THUMB_SIZE = (128, 128)
+    THUMB_SIZE = (300, 400)
 
     """
     Previews size
@@ -88,7 +93,7 @@ class Testing(Config):
 
 
 class Production(Config):
-    PHOTOS_PATH = os.path.join(ROOT_PATH, 'data/photos')
+    PHOTOS_PATH = os.environ.get('MPF_PHOTOS_PATH') or os.path.join(ROOT_PATH, 'data/photos')
     AUTOIMPORT_PATH = os.path.join(PHOTOS_PATH, 'autoimport')
     MPF_PATH = os.path.join(PHOTOS_PATH, '.mpf')
     CACHE_PATH = os.path.join(MPF_PATH, 'cache')

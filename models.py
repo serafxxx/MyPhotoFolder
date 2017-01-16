@@ -9,6 +9,7 @@ import pytz
 from PIL import Image
 
 from app import app, db, log
+from util import ffmpeg
 from util import hashfile, maybe_add_number_to_file_name, mkdir_p, crop_rect
 from util.exiftool import ExifTool
 from util.my_exceptions import MyException
@@ -159,6 +160,22 @@ class MyFile(db.Model):
                 log.exception(e)
         return self._preview
 
+    @property
+    def rel_path(self):
+        return os.path.relpath(self.path, app.config['PHOTOS_PATH'])
+
+    @property
+    def rel_thumb(self):
+        if self.thumb:
+            return os.path.relpath(self.thumb, app.config['PHOTOS_PATH'])
+        return None
+
+    @property
+    def rel_preview(self):
+        if self.preview:
+            return os.path.relpath(self.preview, app.config['PHOTOS_PATH'])
+        return None
+
     def del_thumbs(self):
         ''' Remove generated images. '''
         if self._thumb and os.path.isfile(self._thumb):
@@ -192,22 +209,29 @@ class MyFile(db.Model):
         return None
 
     def get_pil_im(self):
+        """Make a PIL Image object from MyFile so PIL could deal with it"""
         if self.type == TYPE_PHOTO:
+            # PIL understands regular images
+            # just open
             return Image.open(self.path)
         elif self.type == TYPE_RAW:
+            # Use ExifTool to extract preview if image is in RAW format
             im_data = self._exiftool.execute('-b', '-PreviewImage', self.path)
+            return Image.open(StringIO.StringIO(im_data))
+        elif self.type == TYPE_VIDEO:
+            # Use ffmpeg to grab a frame if its video
+            im_data = ffmpeg.get_preview(self.path)
             return Image.open(StringIO.StringIO(im_data))
         else:
             log.warning('get_pil_im is not emplemented for %s' % self)
 
     @start_exiftool
-    def gen_thumbs(self):
+    def gen_thumbs(self, save=True):
         '''
         Remove old thumb and make new one.
         '''
-        self.del_thumbs()
-
         if self.path and os.path.isfile(self.path):
+            self.del_thumbs()
             # Make a name for the thumbs
             preview_path = self.gen_cache_path() + '.preview.jpg'
             thumb_path = self.gen_cache_path() + '.thumb.jpg'
@@ -239,10 +263,15 @@ class MyFile(db.Model):
             self._preview = preview_path
 
             # From preview make thumb
-            im = crop_rect(im)
+            # im = crop_rect(im)
             im.thumbnail(app.config['THUMB_SIZE'], Image.ANTIALIAS)
             im.save(thumb_path)
             self._thumb = thumb_path
+
+            # We need to persist paths in case thumbs were generated on the fly
+            if save:
+                db.session.add(self)
+                db.session.commit()
 
 
 class Imprt(db.Model):

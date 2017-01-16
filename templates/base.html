@@ -5,11 +5,18 @@
         <div class="container-fluid">
             <div class="navbar-header">
 
-                <a class="navbar-brand" href="#">MPF</a>
+                <a class="navbar-brand" href="/">MPF</a>
             </div>
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Overview</a></li>
-                <li><a href="#">Years</a></li>
+                <li><a href="/">Overview</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Years <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% for year in years %}
+                            <li><a href="/date/{{ year }}">{{ year }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
                 <li><a href="#">Albums</a></li>
                 <!--li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -26,4 +33,21 @@
             </ul>
         </div>
     </div>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    {% block my_content %}{% endblock %}
+    </div>
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='style.css')}}" />
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
+    {% include('unitegallery.html') %}
 {% endblock %}

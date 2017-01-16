@@ -12,5 +12,10 @@ if [ ! -d "mpf.ve" ]; then
 fi
 
 
+git pull
+
 source mpf.ve/bin/activate
 pip install -r requirements.txt
+
+# Run database migrations
+alembic upgrade head
