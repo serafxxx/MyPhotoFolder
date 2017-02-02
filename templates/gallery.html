@@ -1,10 +1,18 @@
 <div id="gallery" style="display:none;">
 
     {% for my_file in my_files %}
-        <img alt="{{ my_file.rel_path }}"
-            src="{{ url_for('photos.static', filename=my_file.rel_thumb) }}"
-            data-image="{{ url_for('photos.static', filename=my_file.rel_preview) }}"
-        >
+        {% if my_file.type == TYPE_VIDEO %}
+            <img alt="{{ my_file.rel_path }}"
+                data-type="html5video"
+                data-image="{{ url_for('photos.static', filename=my_file.rel_preview) }}"
+                data-videomp4="{{ url_for('photos.static', filename=my_file.rel_path) }}"
+            >
+        {% else %}
+            <img alt="{{ my_file.rel_path }}"
+                src="{{ url_for('photos.static', filename=my_file.rel_thumb) }}"
+                data-image="{{ url_for('photos.static', filename=my_file.rel_preview) }}"
+            >
+        {% endif %}
     {% endfor %}
 
 </div>

@@ -13,7 +13,7 @@ LOGGING = {
             'format': '%(asctime)s %(levelname)s %(name)s: %(message)s'
         },
         'simple_console': {
-            'format': '%(message)s'
+            'format': '%(levelname)s %(name)s: %(message)s'
         },
         'email': {
             'format': '%(message)s\n\n%(asctime)s %(levelname)s %(name)s'
@@ -46,17 +46,6 @@ LOGGING = {
             'backupCount': 5,
             'formatter': 'simple'
         },
-        'email': {
-            'level': 'WARNING',
-            'class': 'logging.handlers.SMTPHandler',
-            'mailhost': ('192.168.1.3', 25),
-            'fromaddr': 'admin@suhenky.com',
-            'toaddrs': ['serafim@suhenky.com'],
-            'subject': 'MyMediaLib log',
-            'credentials': ('admin', 'outrun96#tints'),
-            'secure': (),
-            'formatter': 'email'
-        },
         # 'push_notification': {
         #     'level': 'INFO',
         #     'class': 'util.logging_handlers.PushoverHandler',
@@ -67,19 +56,19 @@ LOGGING = {
     },
     'loggers': {
         'app': {
-            # 'handlers':['console', 'file', 'email', 'push_notification'],
+            # 'handlers':['console', 'file', 'push_notification'],
             'handlers':['console'],
             'propagate': True,
             'level':'DEBUG',
         },
         # 'files': {
-        #     # 'handlers':['console', 'file', 'email', 'push_notification'],
+        #     # 'handlers':['console', 'file', 'push_notification'],
         #     'handlers':['console'],
         #     'propagate': True,
         #     'level':'DEBUG',
         # },
         # 'devices': {
-        #     # 'handlers':['console', 'file', 'email', 'push_notification'],
+        #     # 'handlers':['console', 'file', 'push_notification'],
         #     'handlers':['console'],
         #     'propagate': True,
         #     'level':'DEBUG',
