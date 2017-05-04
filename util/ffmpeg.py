@@ -8,8 +8,6 @@ def get_preview(video_file_path):
     cmd = [app.config['FFMPEG_BIN'],
            # Suppress info messages
            '-v', 'fatal',
-           # Overwrite output files without asking
-           '-y',
            # Seek to second 2
            # '-ss', '2',
            # Input file
@@ -28,3 +26,34 @@ def get_preview(video_file_path):
         data += line
 
     return data.strip()
+
+def mp4_generator(video_file_path):
+    cmd = [app.config['FFMPEG_BIN'],
+           # Suppress info messages
+           # '-v', 'fatal',
+           # Seek to second 2
+           # '-ss', '0',
+           # Input file
+           '-i', video_file_path,
+
+           # '-qscale', '0',
+           '-c:v', 'libx264',
+           '-c:a', 'aac',
+
+
+
+
+           # Output format
+           '-f', 'mpegts',
+           # Push result to the stdout
+           '-']
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+
+    try:
+        f = proc.stdout
+        byte = f.read(8192)
+        while byte:
+            yield byte
+            byte = f.read(8192)
+    finally:
+        proc.kill()
